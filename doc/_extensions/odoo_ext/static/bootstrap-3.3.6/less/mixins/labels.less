@@ -1,0 +1,13 @@
+/* License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). */
+// Labels
+
+.label-variant(@color) {
+  background-color: @color;
+
+  &[href] {
+    &:hover,
+    &:focus {
+      background-color: darken(@color, 10%);
+    }
+  }
+}

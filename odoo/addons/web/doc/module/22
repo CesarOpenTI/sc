@@ -1,0 +1,7 @@
+# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
+Index: web_example/static/src/tests/timer.js
+===================================================================
+--- /dev/null
++++ web_example/static/src/tests/timer.js
+@@ -0,0 +1 @@
++

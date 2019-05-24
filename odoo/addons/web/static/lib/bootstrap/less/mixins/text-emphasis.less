@@ -1,0 +1,10 @@
+/* License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).*/
+// Typography
+
+.text-emphasis-variant(@color) {
+  color: @color;
+  a&:hover,
+  a&:focus {
+    color: darken(@color, 10%);
+  }
+}
