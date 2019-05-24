@@ -1,0 +1,10 @@
+<odoo>
+    <data>
+        <template id="assets_frontend" inherit_id="web.assets_common" name="smartTraficDependencies">
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" href="/smart_trafic/static/lib/leaflet/leaflet.css"></link>
+                <script type="text/javascript" src="/smart_trafic/static/lib/leaflet/leaflet.js"></script>
+            </xpath>
+        </template>
+    </data>
+</odoo>
