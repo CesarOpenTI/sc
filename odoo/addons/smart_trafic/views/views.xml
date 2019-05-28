@@ -1,6 +1,39 @@
 <!-- License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+<!-- License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
 <odoo>
-   <data>
+  <data>
+    <!-- explicit form view definition -->
 
-    </data>
+    <record model="ir.ui.view" id="smart_trafic.form">
+      <field name="name">Smart Trafic</field>
+      <field name="model">smart_trafic.smart_trafic</field>
+      <field name="arch" type="xml">
+        <form string="Smart Trafic2">
+           <board style="2-1">
+             <column>
+                <div id="mapid">Map</div>
+             </column>
+           </board>
+        </form>
+      </field>
+    </record>
+
+    <!-- actions opening views on models -->
+
+    <record model="ir.actions.act_window" id="smart_trafic.action_window">
+      <field name="name">Smart Trafic</field>
+      <field name="res_model">smart_trafic.smart_trafic</field>
+      <field name="view_id" ref="smart_trafic.form"/>
+    </record>
+
+    <!-- Top menu item -->
+
+    <menuitem name="Smart Trafic" id="smart_trafic.menu_root"/>
+
+    <!-- menu categories -->
+
+    <menuitem name="Congested Roads" id="smart_trafic.menu_1" parent="smart_trafic.menu_root" action="smart_trafic.action_window"/>
+    <menuitem name="Descongested Roads" id="smart_trafic.menu_1" parent="smart_trafic.menu_root"/>
+
+  </data>
 </odoo>

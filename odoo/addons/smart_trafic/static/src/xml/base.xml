@@ -2,7 +2,6 @@
 <templates id="template" xml:space="preserve">
 
     <div t-name="ViewMap">
-        <h1>hell</h1>
     </div>
 
 </templates>
