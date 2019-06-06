@@ -1,1 +1,7 @@
-#mapid { height: 180px; }
+body{
+    background:yellow;
+}
+
+#mapid {
+    height:180px;
+}

@@ -1,23 +1,15 @@
 <!-- License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
 <odoo>
-    <data>
-        <!--<template id="listing"-->
-        <!--   <ul> -->
-        <!--     <li t-foreach="objects" t-as="object"> -->
-        <!--       <a t-attf-href="#{ root }/objects/#{ object.id }"> -->
-        <!--         <t t-esc="object.display_name"/> -->
-        <!--       </a> -->
-        <!--     </li> -->
-        <!--   </ul> -->
-        <!-- </template> -->
-        <!-- <template id="object"> -->
-        <!--   <h1><t t-esc="object.display_name"/></h1> -->
-        <!--   <dl> -->
-        <!--     <t t-foreach="object._fields" t-as="field"> -->
-        <!--       <dt><t t-esc="field"/></dt> -->
-        <!--       <dd><t t-esc="object[field]"/></dd> -->
-        <!--     </t> -->
-        <!--   </dl> -->
-        <!--</template>-->
-    </data>
+  <template id="assets_end" inherit_id="web.assets_backend">
+    <xpath expr="." position="inside">
+      <link rel="stylesheet" href="/smart_trafic/static/libs/leaflet/leaflet.css"></link>
+      <script type="text/javascript" src="/smart_trafic/static/libs/leaflet/leaflet.js"></script>
+
+      <link rel="stylesheet" href="/smart_trafic/static/src/css/smart_trafic.css"></link>
+      <script type="text/javascript" src="/smart_trafic/static/src/js/smart_trafic_view.js"></script>
+      <script type="text/javascript" src="/smart_trafic/static/src/js/smart_trafic_model.js"></script>
+      <script type="text/javascript" src="/smart_trafic/static/src/js/smart_trafic_controller.js"></script>
+      <script type="text/javascript" src="/smart_trafic/static/src/js/smart_trafic_rendered.js"></script>
+    </xpath>
+  </template>
 </odoo>

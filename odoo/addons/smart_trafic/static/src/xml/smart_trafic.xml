@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+    <t t-name="ViewSmartTrafic.buttons">
+      <div class="btn-group btn-group-sm" role="group">
+          <button type="button" id="add" class="btn btn-primary">
+              Add Record
+          </button>
+          <ul class="dropdown-menu o_graph_measures_list">
+              <li>
+                  <a href="#"></a>
+              </li>
+              <li class="divider"></li>
+              <li><a href="#">Count</a></li>
+          </ul>
+      </div>
+      <div class="btn-group btn-group-sm">
+          <button id="map1" class="btn btn-default fa fa-globe o_graph_button" title="Mapa 1"/>
+          <button id="map2" class="btn btn-default fa fa-map-signs o_graph_button" title="Mapa 2"/>
+          <button id="map3" class="btn btn-default fa fa-street-view o_graph_button" title="Mapa 3"/>
+      </div>
+    </t>
+
+    <t t-name="ViewSmartTrafic">
+      <div class="row ml16 mr16">
+            <div id="mapId" class="map map-home" style="margin:12px 0 12px 0;height:500px;"></div>
+        </div>
+    </t>
+
+</templates>

@@ -9,7 +9,7 @@
     'description': """
         this module allow manage smart trafic
     """,
-
+    'sequence':1,
     'author': "Mall Connections",
     'website': "http://www.mallconnections.cl",
 
@@ -20,12 +20,11 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base'],
+    'depends': ['base','web'],
 
     # always loaded
     'data': [
         # 'security/ir.model.access.csv',
-        'views/resources.xml',
         'views/views.xml',
         'views/templates.xml',
     ],
@@ -33,5 +32,8 @@
     'demo': [
         'demo/demo.xml',
     ],
-    'application': True,
+    'qweb': [
+        'static/src/xml/smart_trafic.xml'
+    ],
+    'application': True
 }
