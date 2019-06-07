@@ -13,7 +13,7 @@ odoo.define('Map.Model',function(require){
       // alert("loadModel");
       this.modelName = params.modelName;
       this.domain = params.domain;
-      this.LatLng = params.LatLng;
+      this.latLng = params.latLng;
       return this._fetchData();
     },
     reload: function (handle, params) {
@@ -31,7 +31,7 @@ odoo.define('Map.Model',function(require){
             method: 'get_map_group_data',
             kwargs: {
                 domain: this.domain,
-                LatLng: this.LatLng
+                latLng: this.latLng
             }
         }).then(function (result) {
             self.data = result;

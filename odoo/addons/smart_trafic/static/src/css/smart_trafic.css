@@ -1,7 +1,4 @@
-body{
-    background:yellow;
-}
-
-#mapid {
-    height:180px;
+#mapId {
+  margin:12px 0 12px 0;
+  height:500px;
 }

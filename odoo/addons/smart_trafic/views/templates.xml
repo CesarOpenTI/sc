@@ -2,8 +2,11 @@
 <odoo>
   <template id="assets_end" inherit_id="web.assets_backend">
     <xpath expr="." position="inside">
+
       <link rel="stylesheet" href="/smart_trafic/static/libs/leaflet/leaflet.css"></link>
+      <link rel="stylesheet" href="/smart_trafic/static/libs/leaflet-routing-machine/dist/leaflet-routing-machine.css"></link>
       <script type="text/javascript" src="/smart_trafic/static/libs/leaflet/leaflet.js"></script>
+      <script type="text/javascript" src="/smart_trafic/static/libs/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
 
       <link rel="stylesheet" href="/smart_trafic/static/src/css/smart_trafic.css"></link>
       <script type="text/javascript" src="/smart_trafic/static/src/js/smart_trafic_view.js"></script>

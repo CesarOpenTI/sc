@@ -12,12 +12,6 @@ odoo.define('Map.View',function(require){
   var MapView = AbstractView.extend({
     display_name: 'Maps',
     icon:'fa-map',
-    cssLibs: [
-        '/smart_trafic/static/libs/leaflet/leaflet.css'
-    ],
-    jsLibs: [
-        '/smart_trafic/static/libs/leaflet/leaflet.js',
-    ],
     config:{
       Model: MapModel,
       Controller: MapController,
@@ -29,13 +23,13 @@ odoo.define('Map.View',function(require){
       //alert("initView");
       this._super.apply(this,arguments);
       var attrs = viewInfo.arch.attrs;
-      if (!attrs.Lat) {
-          throw new Error('Map view has not defined "Lat" attribute.');
-      }else if (!attrs.Lng) {
-          throw new Error('Map view has not defined "Lng" attribute.');
+      if (!attrs.lat) {
+          throw new Error('Map view has not defined "lat" attribute.');
+      }else if (!attrs.lng) {
+          throw new Error('Map view has not defined "lng" attribute.');
       }
       // Model Parameters
-      this.loadParams.LatLng = [attrs.Lat,attrs.Lng];
+      this.loadParams.latLng = [attrs.lat,attrs.lng];
     },
   });
 

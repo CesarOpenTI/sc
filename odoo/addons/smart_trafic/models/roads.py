@@ -6,6 +6,6 @@ class congested_roads(models.Model):
     _name = 'smart_trafic.roads'
 
     name = fields.Char('Nombre', required=True)
-    Lat = fields.Float(string="Latitude")
-    Lng = fields.Float(string="Longitude")
-    levelCongested = fields.Selection([(1,'Low'),(2,'Medium'),(3,'High')])
+    lat = fields.Float(string="Latitude")
+    lng = fields.Float(string="Longitude")
+    levelCongested = fields.Selection([(1,'Low'),(2,'Medium'),(3,'High')],string="Level of congestion")

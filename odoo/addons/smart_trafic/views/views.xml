@@ -26,7 +26,7 @@
       <field name="name">Congested Roads</field>
       <field name="model">smart_trafic.roads</field>
       <field name="arch" type="xml">
-          <map Lat="10" Lng="4"></map>
+          <map lat="10" lng="4"></map>
       </field>
     </record>
 
@@ -34,7 +34,7 @@
       <field name="name">Descongested Roads</field>
       <field name="model">smart_trafic.roads</field>
       <field name="arch" type="xml">
-          <map Lat="10" Lng="4"></map>
+          <map lat="10" lng="4"></map>
       </field>
     </record>
 

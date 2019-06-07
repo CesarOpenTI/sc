@@ -43,11 +43,12 @@ odoo.define('Map.Renderer',function(require){
         },
         _render: function () {
             var self = this;
+            // alert(JSON.stringify(this.state));
             this.$el.empty();
             this.$el.append(qweb.render('ViewSmartTrafic', {
                 'groups': this.state,
             }));
-            
+
             if(this.isInDOM){
               this._renderMap();
             }
@@ -66,10 +67,29 @@ odoo.define('Map.Renderer',function(require){
             });
         },
         _renderMap: function(){
+          /*
           var osmUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
             osmAttrib = '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors',
             osm = L.tileLayer(osmUrl, {maxZoom: 18, attribution: osmAttrib});
-          var map = L.map('mapId').setView([23.140445, -82.351644], 17).addLayer(osm);
+          var map = L.map('mapId').setView([-36.829351, -73.055239], 17).addLayer(osm);
+
+          L.marker([-36.829351, -73.055239])
+        		.addTo(map)
+        		.bindPopup('La Catedral de la Habana.')
+        		.openPopup();
+          */
+          var map = L.map('mapId');
+          L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}{r}.png', {
+              attribution: '© OpenStreetMap contributors'
+          }).addTo(map);
+          
+          L.Routing.control({
+            waypoints: [
+                L.latLng(-36.829351, -73.055239),
+                L.latLng(-36.825347, -73.056914)
+            ],
+            routeWhileDragging: true
+          }).addTo(map);
         }
     });
 
