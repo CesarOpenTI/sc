@@ -127,3 +127,4 @@ dmypy.json
 
 #Configuration
 odoo.conf
+.ftpconfig
