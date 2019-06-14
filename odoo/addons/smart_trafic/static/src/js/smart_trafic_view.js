@@ -20,16 +20,14 @@ odoo.define('Map.View',function(require){
     view_type:'map',
     groupable:false,
     init: function(viewInfo,params){
-      //alert("initView");
+      // alert("initView");
       this._super.apply(this,arguments);
       var attrs = viewInfo.arch.attrs;
-      if (!attrs.lat) {
-          throw new Error('Map view has not defined "lat" attribute.');
-      }else if (!attrs.lng) {
-          throw new Error('Map view has not defined "lng" attribute.');
+      if (!attrs.fieldLevel) {
+          throw new Error('Map view has not defined "Field of level" attribute.');
       }
       // Model Parameters
-      this.loadParams.latLng = [attrs.lat,attrs.lng];
+      this.loadParams.fieldLevel = attrs.fieldLevel;
     },
   });
 

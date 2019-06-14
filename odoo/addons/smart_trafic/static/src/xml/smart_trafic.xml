@@ -15,9 +15,9 @@
           </ul>
       </div>
       <div class="btn-group btn-group-sm">
-          <button id="map1" class="btn btn-default fa fa-globe o_graph_button" title="Mapa 1"/>
-          <button id="map2" class="btn btn-default fa fa-map-signs o_graph_button" title="Mapa 2"/>
-          <button id="map3" class="btn btn-default fa fa-street-view o_graph_button" title="Mapa 3"/>
+          <button id="map1" class="btn btn-default fa fa-globe o_map_button" title="Mapa 1"/>
+          <button id="map2" class="btn btn-default fa fa-map-signs o_map_button" title="Mapa 2"/>
+          <button id="map3" class="btn btn-default fa fa-street-view o_map_button" title="Mapa 3"/>
       </div>
     </t>
 
