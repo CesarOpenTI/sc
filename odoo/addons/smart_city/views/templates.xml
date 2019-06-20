@@ -1,0 +1,19 @@
+<!-- License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+<odoo>
+  <template id="assets_end" inherit_id="web.assets_backend">
+    <xpath expr="." position="inside">
+
+      <link rel="stylesheet" href="/smart_city/static/libs/leaflet/leaflet.css"></link>
+      <link rel="stylesheet" href="/smart_city/static/libs/leaflet-routing-machine/dist/leaflet-routing-machine.css"></link>
+      <script type="text/javascript" src="/smart_city/static/libs/leaflet/leaflet.js"></script>
+      <script type="text/javascript" src="/smart_city/static/libs/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+      
+
+      <link rel="stylesheet" href="/smart_city/static/src/css/smart_city.css"></link>
+      <script type="text/javascript" src="/smart_city/static/src/js/smart_city_view.js"></script>
+      <script type="text/javascript" src="/smart_city/static/src/js/smart_city_model.js"></script>
+      <script type="text/javascript" src="/smart_city/static/src/js/smart_city_controller.js"></script>
+      <script type="text/javascript" src="/smart_city/static/src/js/smart_city_rendered.js"></script>
+    </xpath>
+  </template>
+</odoo>
