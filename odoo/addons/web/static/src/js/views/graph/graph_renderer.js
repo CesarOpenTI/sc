@@ -358,7 +358,6 @@ return AbstractRenderer.extend({
             this.to_remove = chart.update;
             nv.utils.onWindowResize(chart.update);
             chart.tooltip.chartContainer(this.el);
-            // alert('_render' + _.str.capitalize(this.state.mode) + 'Chart');
         }
     },
 });

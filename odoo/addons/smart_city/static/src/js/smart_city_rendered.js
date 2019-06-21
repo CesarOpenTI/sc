@@ -64,7 +64,44 @@ odoo.define('Map.Renderer',function(require){
           }else if (state.mode=='earth') {
             var tile_url = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.jpg"
             self._renderLine(state,tile_url);
+          }else if(state.mode=='dark'){
+            // var tile_url = 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_nolabels/{z}/{x}/{y}.png';
+            // self._renderLine(state,tile_url);
+            self._renderExample();
           }
+        },
+        _renderExample: function(){
+          var map = L.map('mapId');
+
+        /* Basemap */
+        var url = 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_nolabels/{z}/{x}/{y}.png';
+        L.tileLayer(url, {
+            attribution: 'OSM & Carto',
+            subdomains: 'abcd',
+            maxZoom: 19
+        }).addTo(map);
+
+        /* Default vectorfield animation, from two ASCIIGrid files with u|v current velocity */
+        d3.text('https://ihcantabria.github.io/Leaflet.CanvasLayer.Field/data/Bay_U.asc', function (u) {
+            d3.text('https://ihcantabria.github.io/Leaflet.CanvasLayer.Field/data/Bay_V.asc', function (v) {
+                var vf = L.VectorField.fromASCIIGrids(u, v);
+                var layer = L.canvasLayer.vectorFieldAnim(vf).addTo(map);
+                map.fitBounds(layer.getBounds());
+
+                layer.on('click', function (e) {
+                    if (e.value !== null) {
+                        var vector = e.value;
+                        var v = vector.magnitude().toFixed(2);
+                        var d = vector.directionTo().toFixed(0);
+                        var html = (`<span class="popupText">${v} m/s to ${d}&deg</span>`);
+                        var popup = L.popup()
+                            .setLatLng(e.latlng)
+                            .setContent(html)
+                            .openOn(map);
+                    }
+                }); // {onClick: callback} inside 'options' is also supported when using layer contructor
+            });
+        });
         },
         _renderLine: function(elements,tile_url){
           var map = new L.Map('mapId');
@@ -78,7 +115,6 @@ odoo.define('Map.Renderer',function(require){
            weight: 12,
            opacity: 1.9
          };
-
           _.each(elements,function(element,index,field){
             if(typeof element.points != "undefined"){
               var polylinePoints = [];
