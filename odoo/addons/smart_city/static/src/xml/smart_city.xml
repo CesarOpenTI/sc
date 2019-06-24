@@ -24,7 +24,7 @@
 
     <t t-name="ViewSmartTrafic">
       <div class="row ml16 mr16">
-            <div id="mapId" class="map"></div>
+            <div id="windy" class="map"></div>
         </div>
     </t>
 

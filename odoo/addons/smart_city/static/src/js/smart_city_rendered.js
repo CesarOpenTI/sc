@@ -67,11 +67,32 @@ odoo.define('Map.Renderer',function(require){
           }else if(state.mode=='dark'){
             // var tile_url = 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_nolabels/{z}/{x}/{y}.png';
             // self._renderLine(state,tile_url);
-            self._renderExample();
+            // self._renderExample();
+            self._renderWindy();
           }
         },
+        _renderWindy: function(){
+          var options = {
+            // Required: API key
+            key: 'wYnQSnk1J6AXvU3HVdzdyeWbptgc33f5',
+            // Put additional console output
+            verbose: true,
+            // Optional: Initial state of the map
+            lat: 50.4,
+            lon: 14.3,
+            zoom: 5 // Initialize Windy API
+
+          };
+          windyInit(options, function (windyAPI) {
+            // windyAPI is ready, and contain 'map', 'store',
+            // 'picker' and other usefull stuff
+            var map = windyAPI.map; // .map is instance of Leaflet map
+
+            L.popup().setLatLng([50.4, 14.3]).setContent("Hello World").openOn(map);
+          });
+        },
         _renderExample: function(){
-          var map = L.map('mapId');
+          var map = L.map('windy');
 
         /* Basemap */
         var url = 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_nolabels/{z}/{x}/{y}.png';
@@ -104,7 +125,7 @@ odoo.define('Map.Renderer',function(require){
         });
         },
         _renderLine: function(elements,tile_url){
-          var map = new L.Map('mapId');
+          var map = new L.Map('windy');
 
       	 L.tileLayer(tile_url, {
             maxZoom: 18,
@@ -138,7 +159,7 @@ odoo.define('Map.Renderer',function(require){
           });
         },
         _renderRouting: function(){
-          // var map = L.map('mapId');
+          // var map = L.map('windy');
           // L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}{r}.png', {
             //     attribution: '© OpenStreetMap contributors'
             // }).addTo(map);
@@ -154,7 +175,7 @@ odoo.define('Map.Renderer',function(require){
         },
         _getLocation: function(points){
           var loadMap = function (id) {
-          var map = L.map("mapId");
+          var map = L.map("windy");
           var tile_url = 'http://{s}.tile.osm.org/{z}/{x}/{y}.png';
           var layer = L.tileLayer(tile_url, {
               attribution: 'OSM'
