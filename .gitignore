@@ -129,3 +129,4 @@ odoo.conf
 devOpenTI.conf
 .ftpconfig
 presentationOpenTI.conf
+testOpenTI.conf
