@@ -75,54 +75,31 @@ odoo.define('Map.Renderer',function(require){
           var options = {
             // Required: API key
             key: 'wYnQSnk1J6AXvU3HVdzdyeWbptgc33f5',
-            // Put additional console output
-            verbose: true,
-            // Optional: Initial state of the map
-            lat: 50.4,
-            lon: 14.3,
-            zoom: 5 // Initialize Windy API
-
-          };
-          windyInit(options, function (windyAPI) {
-            // windyAPI is ready, and contain 'map', 'store',
-            // 'picker' and other usefull stuff
-            var map = windyAPI.map; // .map is instance of Leaflet map
-
-            L.popup().setLatLng([50.4, 14.3]).setContent("Hello World").openOn(map);
-          });
-        },
-        _renderExample: function(){
-          var map = L.map('windy');
-
-        /* Basemap */
-        var url = 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_nolabels/{z}/{x}/{y}.png';
-        L.tileLayer(url, {
-            attribution: 'OSM & Carto',
-            subdomains: 'abcd',
-            maxZoom: 19
-        }).addTo(map);
-
-        /* Default vectorfield animation, from two ASCIIGrid files with u|v current velocity */
-        d3.text('https://ihcantabria.github.io/Leaflet.CanvasLayer.Field/data/Bay_U.asc', function (u) {
-            d3.text('https://ihcantabria.github.io/Leaflet.CanvasLayer.Field/data/Bay_V.asc', function (v) {
-                var vf = L.VectorField.fromASCIIGrids(u, v);
-                var layer = L.canvasLayer.vectorFieldAnim(vf).addTo(map);
-                map.fitBounds(layer.getBounds());
-
-                layer.on('click', function (e) {
-                    if (e.value !== null) {
-                        var vector = e.value;
-                        var v = vector.magnitude().toFixed(2);
-                        var d = vector.directionTo().toFixed(0);
-                        var html = (`<span class="popupText">${v} m/s to ${d}&deg</span>`);
-                        var popup = L.popup()
-                            .setLatLng(e.latlng)
-                            .setContent(html)
-                            .openOn(map);
-                    }
-                }); // {onClick: callback} inside 'options' is also supported when using layer contructor
-            });
-        });
+            lat: -36.78124222006407,
+            lon: -73.07624816894531,
+            zoom: 10,
+          }
+          windyInit( options, windyAPI => {
+              const { picker, utils, broadcast } = windyAPI
+              picker.on('pickerOpened', latLon => {
+                  // picker has been opened at latLon coords
+                  let { lat, lon, values, overlay } = picker.getParams()
+                  // -> 50.4, 14.3, 'wind', [ U,V, ]
+                  let windObject = utils.wind2obj( values )
+                  console.log( windObject )
+              })
+              picker.on('pickerMoved', latLon => {
+                  // picker was dragged by user to latLon coords
+              })
+              picker.on('pickerClosed', () => {
+                  // picker was closed
+              })
+              // Wait since wather is rendered
+              broadcast.once('redrawFinished', () => {
+                  picker.open({ lat: -36.78124222006407, lon: -73.07624816894531 })
+                  // Opening of a picker (async)
+              })
+          })
         },
         _renderLine: function(elements,tile_url){
           var map = new L.Map('windy');
@@ -157,58 +134,10 @@ odoo.define('Map.Renderer',function(require){
                     }
                 }
           });
-        },
-        _renderRouting: function(){
-          // var map = L.map('windy');
-          // L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}{r}.png', {
-            //     attribution: '© OpenStreetMap contributors'
-            // }).addTo(map);
-            //
-            // L.Routing.control({
-              //   waypoints: [
-                //       L.latLng(-36.829351, -73.055239),
-                //       L.latLng(-36.825347, -73.056914),
-                //       L.latLng(-36.82790528395412, -73.05685043334961)
-                //   ],
-                //   routeWhileDragging: true
-                // }).addTo(map);
-        },
-        _getLocation: function(points){
-          var loadMap = function (id) {
-          var map = L.map("windy");
-          var tile_url = 'http://{s}.tile.osm.org/{z}/{x}/{y}.png';
-          var layer = L.tileLayer(tile_url, {
-              attribution: 'OSM'
+          map.locate({setView: true, maxZoom: 16}).on('locationerror', function(e){
+              map.setView([-36.78124222006407,-73.07624816894531],10);
           });
-
-          map.addLayer(layer);
-          _.each(points,function(point,value,field){
-            _.each(point['points'],function(key,value2,field2){
-              L.marker([key.lat, key.lng])
-              .addTo(map);
-            });
-            L.bindPopup(key["name"]);
-          });
-
-          map.locate({setView: true, watch: true}) /* This will return map so you can do chaining */
-              .on('locationfound', function(e){
-                  var marker = L.marker([e.latitude, e.longitude]).bindPopup('Your are here :)');
-                  var circle = L.circle([e.latitude, e.longitude], e.accuracy/2, {
-                      weight: 1,
-                      color: 'red',
-                      fillColor: '#cacaca',
-                      fillOpacity: 0.2
-                  });
-              })
-             .on('locationerror', function(e){
-                  console.log(e);
-                  alert("Location access denied.");
-              });
-          };
-
-
-          loadMap('map');
-        }
+        },
     });
 
     return MapRenderer;
