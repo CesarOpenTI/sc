@@ -4,6 +4,7 @@ from odoo import models, fields, api
 
 class Temperature(models.Model):
     _name = 'temperature'
+    _description = 'Temperature'
 
     name = fields.Char('Nombre', required=True)
     farenheitDegrees = fields.Integer(string="Farenheit Degrees")

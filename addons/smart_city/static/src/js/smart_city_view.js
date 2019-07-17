@@ -25,7 +25,6 @@ odoo.define('Map.View',function(require){
       if (!attrs.fieldLevel) {
           throw new Error('Map view has not defined "Field of level" attribute.');
       }
-      console.log(attrs.fieldLevel+" "+this.arch.attrs.type);
       // Model Parameters
       this.loadParams.fieldLevel = attrs.fieldLevel;
       this.loadParams.mode = attrs.type || 'earth';

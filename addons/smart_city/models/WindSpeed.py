@@ -11,6 +11,7 @@ from sklearn.model_selection import train_test_split
 
 class WindSpeed(models.Model):
     _name = 'wind_speed'
+    _description = 'Wind Velocity'
 
     name = fields.Char('Nombre', required=True)
     speed = fields.Integer(string="Wind Speed (Km/h)")

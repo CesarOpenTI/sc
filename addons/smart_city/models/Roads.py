@@ -4,6 +4,7 @@ from odoo import models, fields, api
 
 class Roads(models.Model):
     _name = 'roads'
+    _description = 'Congestion in the Roads'
 
     name = fields.Char('Nombre', required=True)
     channelWidth = fields.Selection([(1,'One'),(2,'Two'),(3,'Three'),(4,'Four'),(5,'Five'),(6,'Six')],string="Channel Width")
@@ -15,9 +16,9 @@ class Roads(models.Model):
     @api.one
     @api.depends('channelWidth','numberVehicles')
     def _getLevelCongestion(self):
-        if self.channelWidth > 4 and self.numberVehicles < 5:
-            self.levelCongestion = 1
-        elif self.channelWidth < 4 and self.numberVehicles > 5:
+        if self.channelWidth < 2 and self.numberVehicles > 5:
             self.levelCongestion = 3
-        else:
+        elif self.channelWidth < 4 and self.numberVehicles > 25:
             self.levelCongestion = 2
+        else:
+            self.levelCongestion = 1

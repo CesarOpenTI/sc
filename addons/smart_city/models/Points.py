@@ -5,6 +5,7 @@ from odoo import models, fields, api
 class Points(models.Model):
     _name = 'points'
     _rec_name = 'lat'
+    _description = 'Points'
 
     lng = fields.Char(string="Longitude")
     lat = fields.Char(string="Latitude")

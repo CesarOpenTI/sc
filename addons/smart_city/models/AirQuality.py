@@ -4,6 +4,7 @@ from odoo import models, fields, api
 
 class AirQuality(models.Model):
     _name = 'air_quality'
+    _description = 'Air Quality'
 
     name = fields.Char('Nombre', required=True)
     pM10 = fields.Integer(string="Particles Smaller Than 10 Micrometos")

@@ -60,7 +60,8 @@ odoo.define('Map.Renderer',function(require){
             self._renderLine(state,tile_url);
           }else if (state.mode=='hum') {
             var tile_url = 'https://tile-{s}.openstreetmap.fr/hot/{z}/{x}/{y}.png';
-            self._renderLine(state,tile_url);
+            self._renderHeat(state,tile_url);
+            // self._renderLine(state,tile_url);
           }else if (state.mode=='earth') {
             var tile_url = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.jpg"
             self._renderLine(state,tile_url);
@@ -86,7 +87,6 @@ odoo.define('Map.Renderer',function(require){
                   let { lat, lon, values, overlay } = picker.getParams()
                   // -> 50.4, 14.3, 'wind', [ U,V, ]
                   let windObject = utils.wind2obj( values )
-                  console.log( windObject )
               })
               picker.on('pickerMoved', latLon => {
                   // picker was dragged by user to latLon coords
@@ -137,6 +137,63 @@ odoo.define('Map.Renderer',function(require){
           map.locate({setView: true, maxZoom: 16}).on('locationerror', function(e){
               map.setView([-36.78124222006407,-73.07624816894531],10);
           });
+        },
+        _renderHeat: function(elements,tile_url){
+          self = this;
+          self.puntos = [];
+          _.each(elements,function(element,index,field){
+            if(typeof element.points != "undefined"){
+              _.each(element.points,function(point,index2,field2){
+                  self.puntos.push({lat:point.lat, lng:point.lng, count: element.levelCongestion});
+              });
+            }
+          });
+          var testData = {
+            max: 3,
+            min: 1,
+            data: self.puntos
+          };
+
+          var baseLayer = L.tileLayer(
+            tile_url,{
+              maxZoom: 18
+            }
+          );
+
+          var cfg = {
+            // radius should be small ONLY if scaleRadius is true (or small radius is intended)
+            // if scaleRadius is false it will be the constant radius used in pixels
+            "radius": 20,
+            "maxOpacity": 0.4,
+            // scales the radius based on map zoom
+            "scaleRadius": false,
+            // if set to false the heatmap uses the global maximum for colorization
+            // if activated: uses the data maximum within the current map boundaries
+            //   (there will always be a red spot with useLocalExtremas true)
+            "useLocalExtrema": true,
+            // which field name in your data represents the latitude - default "lat"
+            latField: 'lat',
+            // which field name in your data represents the longitude - default "lng"
+            lngField: 'lng',
+            // which field name in your data represents the data value - default "value"
+            valueField: 'count',
+            blur: .60
+          };
+
+
+          var heatmapLayer = new HeatmapOverlay(cfg);
+
+          var map = new L.Map('windy', {
+            center: new L.LatLng(-36.78124222006407, -73.07624816894531),
+            zoom: 8,
+            layers: [baseLayer, heatmapLayer]
+          });
+
+          heatmapLayer.setData(testData);
+
+          // map.locate({setView: true, maxZoom: 16}).on('locationerror', function(e){
+          //     map.setView([-36.78124222006407,-73.07624816894531],10);
+          // });
         },
     });
 
