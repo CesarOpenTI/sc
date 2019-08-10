@@ -7,6 +7,7 @@ odoo.define('Map.Renderer',function(require){
   var _t = core._t;
 
   var MapRenderer = AbstractRenderer.extend({
+        className:"o_map_container",
 
         /**
          * The graph view uses the Leaflet render the map. This lib requires
@@ -56,15 +57,22 @@ odoo.define('Map.Renderer',function(require){
         _renderMap: function(state){
           self = this;
           if(state.mode=='default'){
-            var tile_url = 'http://{s}.tile.osm.org/{z}/{x}/{y}.png';
+            // var tile_url = 'http://{s}.tile.osm.org/{z}/{x}/{y}.png';
+            var tile_url = 'https://osm.openti.cl/osm/{z}/{x}/{y}.png';
             self._renderLine(state,tile_url);
+            // self._renderHeat(state,tile_url);
           }else if (state.mode=='hum') {
-            var tile_url = 'https://tile-{s}.openstreetmap.fr/hot/{z}/{x}/{y}.png';
-            self._renderHeat(state,tile_url);
+            // var tile_url = 'https://tile-{s}.openstreetmap.fr/hot/{z}/{x}/{y}.png';
+            var tile_url = 'https://osm.openti.cl/osm/{z}/{x}/{y}.png';
+            // self._renderHeat(state,tile_url);
             // self._renderLine(state,tile_url);
+            self._renderPoint(state,tile_url);
           }else if (state.mode=='earth') {
-            var tile_url = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.jpg"
-            self._renderLine(state,tile_url);
+            var tile_url = 'https://osm.openti.cl/osm/{z}/{x}/{y}.png';
+            // var tile_url = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.jpg"
+            // self._renderLine(state,tile_url);
+            var tile_url = 'https://osm.openti.cl/osm/{z}/{x}/{y}.png';
+            self._renderHeat(state,tile_url);
           }else if(state.mode=='dark'){
             // var tile_url = 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_nolabels/{z}/{x}/{y}.png';
             // self._renderLine(state,tile_url);
@@ -102,6 +110,7 @@ odoo.define('Map.Renderer',function(require){
           })
         },
         _renderLine: function(elements,tile_url){
+          self = this;
           var map = new L.Map('windy');
 
       	 L.tileLayer(tile_url, {
@@ -109,31 +118,38 @@ odoo.define('Map.Renderer',function(require){
             minZoom: 0
          }).addTo(map);
          map.attributionControl.setPrefix(''); // Don't show the 'Powered by Leaflet' text.
-         var polylineOptions = {
+         self.polylineOptions = {
            weight: 12,
-           opacity: 1.9
+           opacity: 1.9,
+           color:'red'
          };
+         self.polylinePoints = [];
+         self.acum = 0;
+         self.enum = 0;
           _.each(elements,function(element,index,field){
             if(typeof element.points != "undefined"){
-              var polylinePoints = [];
               _.each(element.points,function(point,index2,field2){
-                  polylinePoints.push(new L.LatLng(point.lng, point.lat));
+                  self.polylinePoints.push(new L.LatLng(point.lat, point.lng));
                 });
-                if(polylinePoints.length > 0){
-                    if(element[elements.fieldLevel]==3){
-                      polylineOptions.color = '#ff3030';
-                    }else if(element[elements.fieldLevel]==2){
-                      polylineOptions.color = '#ffa332';
-                    }else if(element[elements.fieldLevel]==1){
-                      polylineOptions.color = '#3165ff';
-                    }
-                      var polyline = new L.Polyline(polylinePoints, polylineOptions);
-                      map.addLayer(polyline);
-                      // zoom the map to the polyline
-                      map.fitBounds(polyline.getBounds());
-                    }
+                if(self.polylinePoints.length > 0){
+                    self.acum += element[elements.fieldLevel];
+                    self.enum +=1;
                 }
+              }
           });
+          var value = self.acum/self.enum;
+          if(value>=2.5){
+            self.polylineOptions.color = 'red';
+          }else if(value>=1,5  && value<=2.4){
+            self.polylineOptions.color = 'green';
+          }else if(value>=0 && value<=1,4){
+            self.polylineOptions.color = 'blue';
+          }
+
+          var polyline = L.polyline(self.polylinePoints, self.polylineOptions).addTo(map);
+          // zoom the map to the polyline
+          map.fitBounds(polyline.getBounds());
+
           map.locate({setView: true, maxZoom: 16}).on('locationerror', function(e){
               map.setView([-36.78124222006407,-73.07624816894531],10);
           });
@@ -143,8 +159,9 @@ odoo.define('Map.Renderer',function(require){
           self.puntos = [];
           _.each(elements,function(element,index,field){
             if(typeof element.points != "undefined"){
+
               _.each(element.points,function(point,index2,field2){
-                  self.puntos.push({lat:point.lat, lng:point.lng, count: element.levelCongestion});
+                  self.puntos.push({lat:point.lat, lng:point.lng, count: element[elements.fieldLevel]});
               });
             }
           });
@@ -163,7 +180,7 @@ odoo.define('Map.Renderer',function(require){
           var cfg = {
             // radius should be small ONLY if scaleRadius is true (or small radius is intended)
             // if scaleRadius is false it will be the constant radius used in pixels
-            "radius": 20,
+            "radius": 40,
             "maxOpacity": 0.4,
             // scales the radius based on map zoom
             "scaleRadius": false,
@@ -177,7 +194,7 @@ odoo.define('Map.Renderer',function(require){
             lngField: 'lng',
             // which field name in your data represents the data value - default "value"
             valueField: 'count',
-            blur: .60
+            blur: .99
           };
 
 
@@ -186,14 +203,41 @@ odoo.define('Map.Renderer',function(require){
           var map = new L.Map('windy', {
             center: new L.LatLng(-36.78124222006407, -73.07624816894531),
             zoom: 8,
+            trackResize:true,
+            boxZoom:true,
+            preferCanvas:true,
             layers: [baseLayer, heatmapLayer]
           });
 
           heatmapLayer.setData(testData);
 
-          // map.locate({setView: true, maxZoom: 16}).on('locationerror', function(e){
-          //     map.setView([-36.78124222006407,-73.07624816894531],10);
-          // });
+          map.locate({setView: true, maxZoom: 10}).on('locationerror', function(e){
+              map.setView([-36.78124222006407,-73.07624816894531],10);
+              map.invalidateSize(true);
+          });
+
+        },
+        /**********************************
+        * Points***************************
+        ************************************/
+        _renderPoint: function(elements,tile_url){
+          var map = L.map('windy',{
+            center: new L.LatLng(-36.78124222006407, -73.07624816894531),
+            zoom:13
+          });
+          self = this;
+          self.puntos = [];
+          _.each(elements,function(element,index,field){
+            if(typeof element.points != "undefined"){
+              _.each(element.points,function(point,index2,field2){
+                var marker = L.marker([point.lat, point.lng]).bindPopup(elements.fieldLevel+": "+element[elements.fieldLevel]).addTo(map);
+              });
+            }
+          });
+
+          L.tileLayer(tile_url,{
+            maxZoom:18,
+          }).addTo(map);
         },
     });
 

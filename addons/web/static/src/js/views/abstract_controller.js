@@ -394,7 +394,6 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
 
         if (config.device.isMobile) {
             // set active view's icon as view switcher button's icon
-            console.log(self.viewType);
             var activeView = _.findWhere(views, {type: this.viewType});
             $switchButtons.find('.o_switch_view_button_icon').addClass('fa fa-lg ' + activeView.icon);
         }

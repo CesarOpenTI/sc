@@ -21,7 +21,7 @@ class AirQuality(models.Model):
     def _getLevelQuality(self):
         if self.pM10 < 3 and self.pM2_5 < 3 and self.sO2 < 3 and self.cO < 3 and self.nO2 < 3 and self.o3 < 3:
             self.levelQuality = 1
-        elif self.pM10 > 3 and self.pM2_5 > 3 and self.sO2 > 3 and self.cO > 3 and self.nO2 > 3 and self.o3 > 3:
-            self.levelQuality = 3
+        elif self.pM10 > 3 and self.pM2_5 > 3 and self.sO2 > 3 and self.cO > 3 and self.nO2 > 3 and self.o3 > 3 and self.pM10 < 6 and self.pM2_5 < 6 and self.sO2 < 6 and self.cO < 6 and self.nO2 < 6 and self.o3 < 6:
+            self.levelQuality = 2
         else:
-            self.levelQuality = 1
+            self.levelQuality = 3

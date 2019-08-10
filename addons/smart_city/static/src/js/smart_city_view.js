@@ -2,12 +2,12 @@ odoo.define('Map.View',function(require){
   'use strict';
 
   var AbstractView = require('web.AbstractView');
+  var core = require('web.core');
   var view_registry = require('web.view_registry');
-  var MapController = require('Map.Controller');
   var MapModel = require('Map.Model');
+  var MapController = require('Map.Controller');
   var MapRenderer = require('Map.Renderer');
 
-  var core = require('web.core');
 
   var MapView = AbstractView.extend({
     display_name: 'Maps',
@@ -17,7 +17,7 @@ odoo.define('Map.View',function(require){
       Controller: MapController,
       Renderer: MapRenderer,
     },
-    view_type:'map',
+    viewType:'map',
     enableTimeRangeMenu: 'true',
     init: function(viewInfo,params){
       this._super.apply(this,arguments);

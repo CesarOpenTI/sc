@@ -479,7 +479,6 @@ return AbstractRenderer.extend({
             }
         }
         var chart = this['_render' + _.str.capitalize(this.state.mode) + 'Chart'](this.state.data);
-
         if (chart) {
             chart.dispatch.on('renderEnd', function () {
                 // FIXME: When 'orient' is right for Y axis, horizontal lines aren't displayed correctly

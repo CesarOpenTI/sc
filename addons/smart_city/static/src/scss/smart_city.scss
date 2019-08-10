@@ -1,0 +1,23 @@
+.o_map_container{
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+    #windy{
+      width: 100%;
+      height: 100%;
+      .leaflet-tile-container{
+        padding: 0;
+        margin: 0;
+        width: 100%;
+        height: 100%;
+      }
+    }
+}
+
+.o_map_container{
+  padding: 0;
+  margin:0;
+  width: 100%;
+  height:100%;
+}

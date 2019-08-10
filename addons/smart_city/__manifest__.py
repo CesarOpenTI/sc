@@ -38,7 +38,7 @@
         'demo/demo.xml',
     ],
     'qweb': [
-        'static/src/xml/smart_city.xml'
+        'static/src/xml/smart_city.xml',
     ],
-    'application': True
+    'application': True,
 }

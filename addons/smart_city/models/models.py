@@ -22,3 +22,8 @@ class Base(models.AbstractModel):
                     'lng': point.lng
                 })
         return result_dict
+
+    # @api.model
+    # def get_video_source_group_data(self,domain):
+    #     #records = self.(domain)
+    #     return "None"
