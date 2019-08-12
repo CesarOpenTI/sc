@@ -33,7 +33,7 @@ class SmartTrafic(http.Controller):
         return np.array(image.getdata()).reshape((im_height, im_width,
                 3)).astype(np.uint8)
 
-    
+
     def gen(self):
         # initialize .csv
         with open('addons/smart_city/models/vehicle_counting_tensorflow/traffic_measurement.csv', 'w') as f:
@@ -49,7 +49,7 @@ class SmartTrafic(http.Controller):
 
         # By default I use an "SSD with Mobilenet" model here. See the detection model zoo (https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md) for a list of other models that can be run out-of-the-box with varying speeds and accuracies.
         # What model to download.
-        MODEL_NAME = '/home/tomate/sc12/addons/smart_city/models/vehicle_counting_tensorflow/ssd_mobilenet_v1_coco_2018_01_28'
+        MODEL_NAME = 'addons/smart_city/models/vehicle_counting_tensorflow/ssd_mobilenet_v1_coco_2018_01_28'
         MODEL_FILE = MODEL_NAME + '.tar.gz'
         DOWNLOAD_BASE = \
             'http://download.tensorflow.org/models/object_detection/'
@@ -58,7 +58,7 @@ class SmartTrafic(http.Controller):
         PATH_TO_CKPT = MODEL_NAME + '/frozen_inference_graph.pb'
 
         # List of the strings that is used to add correct label for each box.
-        PATH_TO_LABELS = os.path.join('/home/tomate/sc12/addons/smart_city/models/vehicle_counting_tensorflow/data', 'mscoco_label_map.pbtxt')
+        PATH_TO_LABELS = os.path.join('addons/smart_city/models/vehicle_counting_tensorflow/data', 'mscoco_label_map.pbtxt')
 
         NUM_CLASSES = 90
 
@@ -105,9 +105,9 @@ class SmartTrafic(http.Controller):
                 while cap.isOpened():
                     (ret, frame) = cap.read()
 
-                    if not ret:
-                        print ('end of the video file...')
-                        break
+                    # if not ret:
+                    #     print ('end of the video file...')
+                    #     break
 
                     input_frame = frame
 
@@ -123,106 +123,101 @@ class SmartTrafic(http.Controller):
                                  feed_dict={image_tensor: image_np_expanded})
 
                     # # Visualization of the results of a detection.
-                    # (counter, csv_line) = \
-                    #     vis_util.visualize_boxes_and_labels_on_image_array(
-                    #     cap.get(1),
-                    #     input_frame,
-                    #     np.squeeze(boxes),
-                    #     np.squeeze(classes).astype(np.int32),
-                    #     np.squeeze(scores),
-                    #     category_index,
-                    #     use_normalized_coordinates=True,
-                    #     line_thickness=4,
-                    #     )
-                    #
-                    # total_passed_vehicle = total_passed_vehicle + counter
-                    #
-                    # # insert information text to video frame
-                    # font = cv2.FONT_HERSHEY_SIMPLEX
-                    # cv2.putText(
-                    #     input_frame,
-                    #     'Detected Vehicles: ' + str(total_passed_vehicle),
-                    #     (10, 35),
-                    #     font,
-                    #     0.8,
-                    #     (0, 0xFF, 0xFF),
-                    #     2,
-                    #     cv2.FONT_HERSHEY_SIMPLEX,
-                    #     )
-                    #
-                    # # when the vehicle passed over line and counted, make the color of ROI line green
-                    # if counter == 1:
-                    #     cv2.line(input_frame, (0, 200), (640, 200), (0, 0xFF, 0), 5)
-                    # else:
-                    #     cv2.line(input_frame, (0, 200), (640, 200), (0, 0, 0xFF), 5)
+                    (counter, csv_line) = \
+                        vis_util.visualize_boxes_and_labels_on_image_array(
+                        cap.get(1),
+                        input_frame,
+                        np.squeeze(boxes),
+                        np.squeeze(classes).astype(np.int32),
+                        np.squeeze(scores),
+                        category_index,
+                        use_normalized_coordinates=True,
+                        line_thickness=4,
+                        )
 
-                    # # insert information text to video frame
-                    # cv2.rectangle(input_frame, (10, 275), (230, 337), (180, 132, 109), -1)
-                    # cv2.putText(
-                    #     input_frame,
-                    #     'ROI Line',
-                    #     (545, 190),
-                    #     font,
-                    #     0.6,
-                    #     (0, 0, 0xFF),
-                    #     2,
-                    #     cv2.LINE_AA,
-                    #     )
-                    # cv2.putText(
-                    #     input_frame,
-                    #     'LAST PASSED VEHICLE INFO',
-                    #     (11, 290),
-                    #     font,
-                    #     0.5,
-                    #     (0xFF, 0xFF, 0xFF),
-                    #     1,
-                    #     cv2.FONT_HERSHEY_SIMPLEX,
-                    #     )
-                    # cv2.putText(
-                    #     input_frame,
-                    #     '-Movement Direction: ' + direction,
-                    #     (14, 302),
-                    #     font,
-                    #     0.4,
-                    #     (0xFF, 0xFF, 0xFF),
-                    #     1,
-                    #     cv2.FONT_HERSHEY_COMPLEX_SMALL,
-                    #     )
-                    # cv2.putText(
-                    #     input_frame,
-                    #     '-Speed(km/h): ' + speed,
-                    #     (14, 312),
-                    #     font,
-                    #     0.4,
-                    #     (0xFF, 0xFF, 0xFF),
-                    #     1,
-                    #     cv2.FONT_HERSHEY_COMPLEX_SMALL,
-                    #     )
-                    # cv2.putText(
-                    #     input_frame,
-                    #     '-Color: ' + color,
-                    #     (14, 322),
-                    #     font,
-                    #     0.4,
-                    #     (0xFF, 0xFF, 0xFF),
-                    #     1,
-                    #     cv2.FONT_HERSHEY_COMPLEX_SMALL,
-                    #     )
-                    # cv2.putText(
-                    #     input_frame,
-                    #     '-Vehicle Size/Type: ' + size,
-                    #     (14, 332),
-                    #     font,
-                    #     0.4,
-                    #     (0xFF, 0xFF, 0xFF),
-                    #     1,
-                    #     cv2.FONT_HERSHEY_COMPLEX_SMALL,
-                    #     )
+                    total_passed_vehicle = total_passed_vehicle + counter
 
-                    # cv2.imshow('vehicle detection', input_frame)
-                    #
-                    # if cv2.waitKey(1) & 0xFF == ord('q'):
-                    #     break
+                    # insert information text to video frame
+                    font = cv2.FONT_HERSHEY_SIMPLEX
+                    cv2.putText(
+                        input_frame,
+                        'Detected Vehicles: ' + str(total_passed_vehicle),
+                        (10, 35),
+                        font,
+                        0.8,
+                        (0, 0xFF, 0xFF),
+                        2,
+                        cv2.FONT_HERSHEY_SIMPLEX,
+                        )
+
+                    # when the vehicle passed over line and counted, make the color of ROI line green
+                    if counter == 1:
+                        cv2.line(input_frame, (0, 200), (640, 200), (0, 0xFF, 0), 5)
+                    else:
+                        cv2.line(input_frame, (0, 200), (640, 200), (0, 0, 0xFF), 5)
+
+                    # insert information text to video frame
+                    cv2.rectangle(input_frame, (10, 275), (230, 337), (180, 132, 109), -1)
+                    cv2.putText(
+                        input_frame,
+                        'ROI Line',
+                        (545, 190),
+                        font,
+                        0.6,
+                        (0, 0, 0xFF),
+                        2,
+                        cv2.LINE_AA,
+                        )
+                    cv2.putText(
+                        input_frame,
+                        'LAST PASSED VEHICLE INFO',
+                        (11, 290),
+                        font,
+                        0.5,
+                        (0xFF, 0xFF, 0xFF),
+                        1,
+                        cv2.FONT_HERSHEY_SIMPLEX,
+                        )
+                    cv2.putText(
+                        input_frame,
+                        '-Movement Direction: ' + direction,
+                        (14, 302),
+                        font,
+                        0.4,
+                        (0xFF, 0xFF, 0xFF),
+                        1,
+                        cv2.FONT_HERSHEY_COMPLEX_SMALL,
+                        )
+                    cv2.putText(
+                        input_frame,
+                        '-Speed(km/h): ' + speed,
+                        (14, 312),
+                        font,
+                        0.4,
+                        (0xFF, 0xFF, 0xFF),
+                        1,
+                        cv2.FONT_HERSHEY_COMPLEX_SMALL,
+                        )
+                    cv2.putText(
+                        input_frame,
+                        '-Color: ' + color,
+                        (14, 322),
+                        font,
+                        0.4,
+                        (0xFF, 0xFF, 0xFF),
+                        1,
+                        cv2.FONT_HERSHEY_COMPLEX_SMALL,
+                        )
+                    cv2.putText(
+                        input_frame,
+                        '-Vehicle Size/Type: ' + size,
+                        (14, 332),
+                        font,
+                        0.4,
+                        (0xFF, 0xFF, 0xFF),
+                        1,
+                        cv2.FONT_HERSHEY_COMPLEX_SMALL,
+                        )
 
                     cv2.imwrite('addons/smart_city/static/camera.jpg', frame)
                     yield (b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + open('addons/smart_city/static/camera.jpg', 'rb').read() + b'\r\n')

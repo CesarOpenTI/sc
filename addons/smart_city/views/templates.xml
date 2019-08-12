@@ -50,9 +50,9 @@
 
         <div class="container mb-5 pb-5">
             <h1>Video</h1>
-            <img src="https://test.openti.cl/smart_city"/>
+            <img src="http://127.0.0.1:8070/smart_city"/>
         </div>
     </t>
   </template>
-  
+
 </odoo>
