@@ -38,6 +38,7 @@ setup/win32/static/postgresql*.exe
 /man/
 /share/
 /src/
+/sc12/
 devOpenTI.conf
 testOpenTI.conf
 /DevelopmentCookbook
