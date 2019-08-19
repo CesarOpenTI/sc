@@ -24,14 +24,17 @@
 
     # always loaded
     'data': [
-        'views/SmartTraficView.xml',
         'views/PointView.xml',
+        'views/PerimeterView.xml',
         'views/RoadCongestionView.xml',
+        'views/CameraView.xml',
         'views/AirQualityView.xml',
         'views/TemperatureView.xml',
         'views/WindSpeedView.xml',
         'views/templates.xml',
         'security/ir.model.access.csv',
+        'views/SmartCityMenu.xml',
+        'demo/demo.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

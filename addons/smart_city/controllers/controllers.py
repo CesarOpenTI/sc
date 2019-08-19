@@ -11,6 +11,7 @@ import tensorflow as tf
 import zipfile
 import cv2
 import numpy as np
+import scipy
 import csv
 import time
 import logging
@@ -24,7 +25,7 @@ from PIL import Image
 from odoo.addons.smart_city.models.vehicle_counting_tensorflow.utils import visualization_utils as vis_util
 from odoo.addons.smart_city.models.vehicle_counting_tensorflow.utils import label_map_util
 
-#comments on leg
+#comments on log
 _logger = logging.getLogger(__name__)
 
 class SmartTrafic(http.Controller):
@@ -34,7 +35,7 @@ class SmartTrafic(http.Controller):
                 3)).astype(np.uint8)
 
 
-    def gen(self):
+    def gen(self,url):
         # initialize .csv
         with open('addons/smart_city/models/vehicle_counting_tensorflow/traffic_measurement.csv', 'w') as f:
             writer = csv.writer(f)
@@ -42,8 +43,8 @@ class SmartTrafic(http.Controller):
                 'Vehicle Type/Size, Vehicle Color, Vehicle Movement Direction, Vehicle Speed (km/h)'
             writer.writerows([csv_line.split(',')])
 
-        cap = cv2.VideoCapture("rtsp://admin:hv729183@200.111.182.35/Streaming/channels/101/httpPreview")
-
+        # cap = cv2.VideoCapture("rtsp://admin:hv729183@200.111.182.35/Streaming/channels/101/httpPreview")
+        cap = cv2.VideoCapture(url)
         # Variables
         total_passed_vehicle = 0  # using it to count vehicles
 
@@ -80,12 +81,6 @@ class SmartTrafic(http.Controller):
         categories = label_map_util.convert_label_map_to_categories(label_map, max_num_classes=NUM_CLASSES, use_display_name=True)
         category_index = label_map_util.create_category_index(categories)
 
-        total_passed_vehicle = 0
-        speed = 'waiting...'
-        direction = 'waiting...'
-        size = 'waiting...'
-        color = 'waiting...'
-
         with detection_graph.as_default():
             with tf.Session(graph=detection_graph) as sess:
 
@@ -102,20 +97,19 @@ class SmartTrafic(http.Controller):
                 num_detections = detection_graph.get_tensor_by_name('num_detections:0')
 
                 # for all the frames that are extracted from input video
-                while cap.isOpened():
+                # while cap.isOpened():
+                while True:
                     (ret, frame) = cap.read()
 
-                    # if not ret:
-                    #     print ('end of the video file...')
-                    #     break
+                    if not ret:
+                        print ('end of the video file...')
+                        break
 
                     input_frame = frame
 
                     # Expand dimensions since the model expects images to have shape: [1, None, None, 3]
                     image_np_expanded = np.expand_dims(input_frame, axis=0)
-                    # p = "#{d_b}####{d_s}####{d_c}####{n_d}####".format(d_b=detection_boxes,d_s=detection_scores,d_c=detection_classes,n_d=num_detections)
 
-                    # _logger.exception(p)
                     # Actual detection.
                     (boxes, scores, classes, num) = \
                         sess.run([detection_boxes, detection_scores,
@@ -135,111 +129,12 @@ class SmartTrafic(http.Controller):
                         line_thickness=4,
                         )
 
-                    total_passed_vehicle = total_passed_vehicle + counter
-
-                    # insert information text to video frame
-                    font = cv2.FONT_HERSHEY_SIMPLEX
-                    cv2.putText(
-                        input_frame,
-                        'Detected Vehicles: ' + str(total_passed_vehicle),
-                        (10, 35),
-                        font,
-                        0.8,
-                        (0, 0xFF, 0xFF),
-                        2,
-                        cv2.FONT_HERSHEY_SIMPLEX,
-                        )
-
-                    # when the vehicle passed over line and counted, make the color of ROI line green
-                    if counter == 1:
-                        cv2.line(input_frame, (0, 200), (640, 200), (0, 0xFF, 0), 5)
-                    else:
-                        cv2.line(input_frame, (0, 200), (640, 200), (0, 0, 0xFF), 5)
-
-                    # insert information text to video frame
-                    cv2.rectangle(input_frame, (10, 275), (230, 337), (180, 132, 109), -1)
-                    cv2.putText(
-                        input_frame,
-                        'ROI Line',
-                        (545, 190),
-                        font,
-                        0.6,
-                        (0, 0, 0xFF),
-                        2,
-                        cv2.LINE_AA,
-                        )
-                    cv2.putText(
-                        input_frame,
-                        'LAST PASSED VEHICLE INFO',
-                        (11, 290),
-                        font,
-                        0.5,
-                        (0xFF, 0xFF, 0xFF),
-                        1,
-                        cv2.FONT_HERSHEY_SIMPLEX,
-                        )
-                    cv2.putText(
-                        input_frame,
-                        '-Movement Direction: ' + direction,
-                        (14, 302),
-                        font,
-                        0.4,
-                        (0xFF, 0xFF, 0xFF),
-                        1,
-                        cv2.FONT_HERSHEY_COMPLEX_SMALL,
-                        )
-                    cv2.putText(
-                        input_frame,
-                        '-Speed(km/h): ' + speed,
-                        (14, 312),
-                        font,
-                        0.4,
-                        (0xFF, 0xFF, 0xFF),
-                        1,
-                        cv2.FONT_HERSHEY_COMPLEX_SMALL,
-                        )
-                    cv2.putText(
-                        input_frame,
-                        '-Color: ' + color,
-                        (14, 322),
-                        font,
-                        0.4,
-                        (0xFF, 0xFF, 0xFF),
-                        1,
-                        cv2.FONT_HERSHEY_COMPLEX_SMALL,
-                        )
-                    cv2.putText(
-                        input_frame,
-                        '-Vehicle Size/Type: ' + size,
-                        (14, 332),
-                        font,
-                        0.4,
-                        (0xFF, 0xFF, 0xFF),
-                        1,
-                        cv2.FONT_HERSHEY_COMPLEX_SMALL,
-                        )
+                    # _logger.exception(num[0].astype(str))
 
                     cv2.imwrite('addons/smart_city/static/camera.jpg', frame)
-                    yield (b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + open('addons/smart_city/static/camera.jpg', 'rb').read() + b'\r\n')
+                    return (b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + open('addons/smart_city/static/camera.jpg', 'rb').read() + b'\r\n')
 
-                    # if csv_line != 'not_available':
-                    #     with open('traffic_measurement.csv', 'a') as f:
-                    #         writer = csv.writer(f)
-                    #         (size, color, direction, speed) = \
-                    #             csv_line.split(',')
-                    #         writer.writerows([csv_line.split(',')])
-                # cap.release()
-                # cv2.destroyAllWindows()
-        # while True:
-        #     rval, frame = cap.read()
-        #     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        #     cv2.imwrite('addons/smart_city/static/camera.jpg', gray)
-        #     yield (b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + open('addons/smart_city/static/camera.jpg', 'rb').read() + b'\r\n')
 
-    @http.route('/smart_city', auth='public')
-    def index(self, **kw):
-        return http.Response(self.gen(),mimetype='multipart/x-mixed-replace; boundary=frame')
-
-    @http.route('/videoo', auth='public')
-    def videoo(self,**kw):
-        return http.request.render('smart_city.hello')
+    @http.route('/smart_city/<model("camera"):camera>', auth='public')
+    def index(self,camera, **kw):
+        return http.Response(self.gen(camera.url),mimetype='multipart/x-mixed-replace; boundary=frame')

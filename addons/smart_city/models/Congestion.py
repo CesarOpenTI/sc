@@ -2,10 +2,11 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 from odoo import models, fields, api
 
-class Roads(models.Model):
-    _name = 'roads'
+class Congestion(models.Model):
+    #_name = 'congestion'
     _description = 'Congestion in the Roads'
 
+    name = fields.Char('Nombre', required=True)
     channelWidth = fields.Selection([(1,'One'),(2,'Two'),(3,'Three'),(4,'Four'),(5,'Five'),(6,'Six')],string="Channel Width")
     numberVehicles = fields.Integer(string="Number of Vehicles")
     vehiclesVelocity = fields.Integer(string="Velocity Vehicles (Km/h)")

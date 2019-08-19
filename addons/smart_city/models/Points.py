@@ -6,9 +6,15 @@ class Points(models.Model):
     _name = 'points'
     _rec_name = 'lat'
     _description = 'Points'
-
+    # latLng = fields.Float("Latitude and Longitude",compute="_getLatLng")
     lng = fields.Char(string="Longitude")
     lat = fields.Char(string="Latitude")
+
+    # @api.one
+    # @api.depends('lat','lng')
+    # def _getLatLng(self):
+    #     preLatLng = "{lat}{lng}".format(lat=self.lat,lng=self.lng)
+    #     self.LatLng = float(preLatLng)
 
     @api.multi
     def name_get(self):

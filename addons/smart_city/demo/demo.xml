@@ -1,31 +1,18 @@
 <!-- License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
 <odoo>
-    <data>
-        <!--  -->
-        <!--   <record id="object0" model="smart_trafic.smart_trafic"> -->
-        <!--     <field name="name">Object 0</field> -->
-        <!--     <field name="value">0</field> -->
-        <!--   </record> -->
-        <!--  -->
-        <!--   <record id="object1" model="smart_trafic.smart_trafic"> -->
-        <!--     <field name="name">Object 1</field> -->
-        <!--     <field name="value">10</field> -->
-        <!--   </record> -->
-        <!--  -->
-        <!--   <record id="object2" model="smart_trafic.smart_trafic"> -->
-        <!--     <field name="name">Object 2</field> -->
-        <!--     <field name="value">20</field> -->
-        <!--   </record> -->
-        <!--  -->
-        <!--   <record id="object3" model="smart_trafic.smart_trafic"> -->
-        <!--     <field name="name">Object 3</field> -->
-        <!--     <field name="value">30</field> -->
-        <!--   </record> -->
-        <!--  -->
-        <!--   <record id="object4" model="smart_trafic.smart_trafic"> -->
-        <!--     <field name="name">Object 4</field> -->
-        <!--     <field name="value">40</field> -->
-        <!--   </record> -->
-        <!--  -->
+    <data noupdate="1">
+      <record forcecreate="True" id="capture_road_date" model="ir.cron">
+        <field name="name">Capture of vehicles Quantity</field>
+        <field eval="True" name="active"/>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="interval_numbre">24</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field ref="model_camera" name="model_id"/>
+        <field name="state">code</field>
+        <field name="code">model.countVehicles()</field>
+        <field eval="False" name="doall"/>
+        <field name="function">True</field>
+      </record>
     </data>
 </odoo>

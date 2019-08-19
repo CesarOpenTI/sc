@@ -6,14 +6,13 @@ class AirQuality(models.Model):
     _name = 'air_quality'
     _description = 'Air Quality'
 
-    name = fields.Char('Nombre', required=True)
     pM10 = fields.Integer(string="Particles Smaller Than 10 Micrometos")
     pM2_5 = fields.Integer(string="Particles Smaller Than 2.5 Micrometos")
     sO2 = fields.Integer(string="Sulfur Dioxide")
     cO = fields.Integer(string="Carbon Monoxide")
     nO2 = fields.Integer(string="Nitrogen Dioxide")
     o3 = fields.Integer(string="Ozone")
-    points = fields.Many2many('points',string="Set of Points")
+    perimeters = fields.Many2one('perimeter',string='Set of Points')
     levelQuality = fields.Selection([(1,'Low'),(2,'Medium'),(3,'High')],string="Level Quality",compute="_getLevelQuality")
 
     @api.one

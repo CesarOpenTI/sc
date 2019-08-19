@@ -1,5 +1,0 @@
-<odoo>
-  <data>
-    <menuitem id="smart" name="Smart City" web_icon="smart_city,static/description/icon.png" />
-  </data>
-</odoo>

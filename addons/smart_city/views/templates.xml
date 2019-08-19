@@ -5,15 +5,15 @@
 
       <!--Leaflet-->
       <link rel="stylesheet" href="/smart_city/static/libs/leaflet/leaflet.css"></link>
-      <script type="text/javascript" src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
-      <!-- <script type="text/javascript" src="/smart_city/static/libs/leaflet/leaflet.js"></script> -->
+      <script type="text/javascript" src="/smart_city/static/libs/leaflet/leaflet.js"></script>
+      <!-- <script type="text/javascript" src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script> -->
 
 
       <!--windyAPI and dependencies-->
-      <script type="text/javascript" src="https://api4.windy.com/assets/libBoot.js"></script>
+      <!-- <script type="text/javascript" src="https://api4.windy.com/assets/libBoot.js"></script> -->
 
       <!--Leaflet Canvas Layer-->
-      <script src="/smart_city/static/libs/leaflet-canvas-layer/dist/leaflet.canvaslayer.field.js"></script>
+      <!-- <script src="/smart_city/static/libs/leaflet-canvas-layer/dist/leaflet.canvaslayer.field.js"></script> -->
 
       <!--Leaflet Routing Machine-->
       <!-- <link rel="stylesheet" href="/smart_city/static/libs/leaflet-routing-machine/dist/leaflet-routing-machine.css"></link>
@@ -30,29 +30,7 @@
       <script type="text/javascript" src="/smart_city/static/src/js/smart_city_controller.js"></script>
       <script type="text/javascript" src="/smart_city/static/src/js/smart_city_rendered.js"></script>
 
-      <!--VideoSources View-->
-      <!-- <script type="text/javascript" src="/smart_city/static/src/js/views/videoSource/video_source_rendered.js"/> -->
-
     </xpath>
-  </template>
-
-
-  <template id="hello">
-    <t t-call="web.layout">
-        <t t-set="html_data" t-value="{'style': 'height: 100%;'}"/>
-        <t t-set="head">
-            <t t-call-assets="web.assets_common" t-js="false"/>
-            <t t-call-assets="web.assets_frontend" t-js="false"/>
-            <t t-call-assets="web.assets_common" t-css="false"/>
-            <t t-call-assets="web.assets_frontend" t-css="false"/>
-        </t>
-        <t t-set="body_classname" t-value="'bg-100'"/>
-
-        <div class="container mb-5 pb-5">
-            <h1>Video</h1>
-            <img src="http://127.0.0.1:8070/smart_city"/>
-        </div>
-    </t>
   </template>
 
 </odoo>

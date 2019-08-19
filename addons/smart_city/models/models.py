@@ -11,16 +11,18 @@ class Base(models.AbstractModel):
         records = self.search(domain)
         result_dict = {}
         for record in records:
-            for point in record.points:
-                if record.id not in result_dict:
-                    result_dict[record.id] = {
-                        fieldLevel:record[fieldLevel],
-                        'points':[],
-                    }
-                result_dict[record.id]['points'].append({
-                    'lat': point.lat,
-                    'lng': point.lng
-                })
+            record.search([],limit=5)
+            for perimeter in record.perimeters:
+                for point in perimeter.points:
+                    if record.id not in result_dict:
+                        result_dict[record.id] = {
+                            fieldLevel:record[fieldLevel],
+                            'points':[],
+                        }
+                    result_dict[record.id]['points'].append({
+                        'lat': point.lat,
+                        'lng': point.lng
+                    })
         return result_dict
 
     # @api.model

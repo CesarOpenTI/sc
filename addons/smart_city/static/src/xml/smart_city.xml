@@ -20,8 +20,4 @@
             <p><t t-esc="description"/></p>
         </div>
     </div>
-
-    <t t-name="ViewVideoSource">
-        <h1>Hell</h1>
-    </t>
 </templates>

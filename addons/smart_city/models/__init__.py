@@ -5,6 +5,7 @@ from . import Points
 from . import WindSpeed
 from . import AirQuality
 from . import Temperature
+from . import Perimeter
 from . import Roads
 from . import ir_action_act_window
 from . import ir_ui_view
