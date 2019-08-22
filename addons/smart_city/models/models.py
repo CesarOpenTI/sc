@@ -11,7 +11,6 @@ class Base(models.AbstractModel):
         records = self.search(domain)
         result_dict = {}
         for record in records:
-            record.search([],limit=5)
             for perimeter in record.perimeters:
                 for point in perimeter.points:
                     if record.id not in result_dict:

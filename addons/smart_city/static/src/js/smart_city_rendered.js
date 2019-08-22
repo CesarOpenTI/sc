@@ -60,55 +60,22 @@ odoo.define('Map.Renderer',function(require){
             console.log(state.mode);
             // var tile_url = 'http://{s}.tile.osm.org/{z}/{x}/{y}.png';
             var tile_url = 'https://osm.urbos.io/osm/{z}/{x}/{y}.png';
-            self._renderLine(state,tile_url);
-            // self._renderHeat(state,tile_url);
+            // self._renderLine(state,tile_url);
+            self._renderOL(state,tile_url);
           }else if (state.mode=='hum') {
             // var tile_url = 'https://tile-{s}.openstreetmap.fr/hot/{z}/{x}/{y}.png';
             var tile_url = 'https://osm.urbos.io/osm/{z}/{x}/{y}.png';
-            // self._renderHeat(state,tile_url);
-            // self._renderLine(state,tile_url);
             self._renderPoint(state,tile_url);
           }else if (state.mode=='earth') {
             // var tile_url = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.jpg"
             var tile_url = 'https://osm.urbos.io/osm/{z}/{x}/{y}.png';
-            // self._renderLine(state,tile_url);
             self._renderHeat(state,tile_url);
           }else if(state.mode=='dark'){
             var tile_url = 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_nolabels/{z}/{x}/{y}.png';
-            self._renderLine(state,tile_url);
-            // self._renderExample();
-            // self._renderWindy();
+            // self._renderLine(state,tile_url);
+            self._renderOL(state,tile_url);
           }
         },
-        // _renderWindy: function(){
-        //   var options = {
-        //     // Required: API key
-        //     key: 'wYnQSnk1J6AXvU3HVdzdyeWbptgc33f5',
-        //     lat: -36.78124222006407,
-        //     lon: -73.07624816894531,
-        //     zoom: 10,
-        //   }
-        //   windyInit( options, windyAPI => {
-        //       const { picker, utils, broadcast } = windyAPI
-        //       picker.on('pickerOpened', latLon => {
-        //           // picker has been opened at latLon coords
-        //           let { lat, lon, values, overlay } = picker.getParams()
-        //           // -> 50.4, 14.3, 'wind', [ U,V, ]
-        //           let windObject = utils.wind2obj( values )
-        //       })
-        //       picker.on('pickerMoved', latLon => {
-        //           // picker was dragged by user to latLon coords
-        //       })
-        //       picker.on('pickerClosed', () => {
-        //           // picker was closed
-        //       })
-        //       // Wait since wather is rendered
-        //       broadcast.once('redrawFinished', () => {
-        //           picker.open({ lat: -36.78124222006407, lon: -73.07624816894531 })
-        //           // Opening of a picker (async)
-        //       })
-        //   })
-        // },
         _renderLine: function(elements,tile_url){
           self = this;
           var map = new L.Map('windy');
@@ -238,6 +205,20 @@ odoo.define('Map.Renderer',function(require){
           L.tileLayer(tile_url,{
             maxZoom:18,
           }).addTo(map);
+        },
+        _renderOL:function(elements,tile_url){
+          var map = new ol.Map({
+            target: 'windy',
+            layers: [
+              new ol.layer.Tile({
+                source: new ol.source.OSM()
+              })
+            ],
+            view: new ol.View({
+              center: ol.proj.fromLonLat([37.41, 8.82]),
+              zoom: 4
+            })
+          });
         },
     });
 

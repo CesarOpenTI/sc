@@ -6,18 +6,9 @@
       <!--Leaflet-->
       <link rel="stylesheet" href="/smart_city/static/libs/leaflet/leaflet.css"></link>
       <script type="text/javascript" src="/smart_city/static/libs/leaflet/leaflet.js"></script>
-      <!-- <script type="text/javascript" src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script> -->
 
-
-      <!--windyAPI and dependencies-->
-      <!-- <script type="text/javascript" src="https://api4.windy.com/assets/libBoot.js"></script> -->
-
-      <!--Leaflet Canvas Layer-->
-      <!-- <script src="/smart_city/static/libs/leaflet-canvas-layer/dist/leaflet.canvaslayer.field.js"></script> -->
-
-      <!--Leaflet Routing Machine-->
-      <!-- <link rel="stylesheet" href="/smart_city/static/libs/leaflet-routing-machine/dist/leaflet-routing-machine.css"></link>
-      <script type="text/javascript" src="/smart_city/static/libs/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script> -->
+      <link rel="stylesheet" href="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/css/ol.css" type="text/css"/>
+      <script src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/build/ol.js"></script>
 
       <!-- Heat Maps -->
       <script type="text/javascript" src="/smart_city/static/libs/leaflet-heatmap/heatmap.min.js"></script>
