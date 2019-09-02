@@ -4,7 +4,7 @@
     <record id="WindSpeed" model="ir.actions.act_window">
       <field name="name">Wind Speed</field>
       <field name="res_model">wind_speed</field>
-      <field name="view_mode">tree,map,form,graph</field>
+      <field name="view_mode">tree,map,form</field>
     </record>
 
     <record id="wS_tree_view" model="ir.ui.view">

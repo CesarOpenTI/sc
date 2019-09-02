@@ -41,6 +41,7 @@ odoo.define('Map.Renderer',function(require){
 
             if(this.isInDOM){
               if(Object.keys(self.state).length > 2){
+                console.log(self.state);
                 self._renderMap(self.state);
               }else{
                 self.$el.empty();
@@ -56,24 +57,16 @@ odoo.define('Map.Renderer',function(require){
         },
         _renderMap: function(state){
           self = this;
-          if(state.mode=='default'){
-            console.log(state.mode);
-            // var tile_url = 'http://{s}.tile.osm.org/{z}/{x}/{y}.png';
-            var tile_url = 'https://osm.urbos.io/osm/{z}/{x}/{y}.png';
-            // self._renderLine(state,tile_url);
+          var tile_url = 'https://osm.urbos.io/osm/{z}/{x}/{y}.png';
+
+          if (state.mode=='earth') {
+            self._renderOLHeat(state,tile_url);
+          }if(state.mode=='default'){
             self._renderOL(state,tile_url);
           }else if (state.mode=='hum') {
-            // var tile_url = 'https://tile-{s}.openstreetmap.fr/hot/{z}/{x}/{y}.png';
-            var tile_url = 'https://osm.urbos.io/osm/{z}/{x}/{y}.png';
-            self._renderPoint(state,tile_url);
-          }else if (state.mode=='earth') {
-            // var tile_url = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.jpg"
-            var tile_url = 'https://osm.urbos.io/osm/{z}/{x}/{y}.png';
-            self._renderHeat(state,tile_url);
-          }else if(state.mode=='dark'){
-            var tile_url = 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_nolabels/{z}/{x}/{y}.png';
-            // self._renderLine(state,tile_url);
             self._renderOL(state,tile_url);
+          }else if(state.mode=='dark'){
+            self._renderOLine(state,tile_url);
           }
         },
         _renderLine: function(elements,tile_url){
@@ -184,9 +177,6 @@ odoo.define('Map.Renderer',function(require){
           });
 
         },
-        /**********************************
-        * Points***************************
-        ************************************/
         _renderPoint: function(elements,tile_url){
           var map = L.map('windy',{
             center: new L.LatLng(-36.78124222006407, -73.07624816894531),
@@ -206,19 +196,196 @@ odoo.define('Map.Renderer',function(require){
             maxZoom:18,
           }).addTo(map);
         },
+        /***********************
+        *******OpenLayers*******
+        ************************/
         _renderOL:function(elements,tile_url){
+
+          var view = new ol.View({
+            center: ol.proj.fromLonLat([-73.07624816894531,-36.78124222006407]),
+            zoom: 10
+          });
+
+          var layer = new ol.layer.Tile({
+            source: new ol.source.XYZ({url:tile_url})
+          });
+
+          var geolocation = new ol.Geolocation({
+            projection: view.getProjection(),
+	          tracking:true
+          });
+
+          geolocation.on('change', function(evt) {
+            view.setCenter(geolocation.getPosition());
+          });
+
+          geolocation.on('error', function(error) {
+            console.log(error);
+          });
+
           var map = new ol.Map({
             target: 'windy',
             layers: [
-              new ol.layer.Tile({
-                source: new ol.source.OSM()
-              })
+              layer
             ],
+            view: view
+          });
+
+        },
+        _renderOLine: function(elements, tile_url){
+          self = this;
+          var image = new ol.style.Circle({
+            radius: 5,
+            fill: null,
+            stroke: new ol.style.Stroke({color: 'red', width: 1})
+          });
+
+          var styles = {
+            'LineString': new ol.style.Style({
+              stroke: new ol.style.Stroke({
+                color: 'green',
+                lineDash: [4],
+                width: 1
+              })
+            }),
+            'Polygon': new ol.style.Style({
+              stroke: new ol.style.Stroke({
+                color: 'blue',
+                lineDash: [4],
+                width: 3
+              }),
+              fill: new ol.style.Fill({
+                color: 'rgba(0, 0, 255, 0.1)'
+              })
+            }),
+          };
+
+          var styleFunction = function(feature) {
+            return styles[feature.getGeometry().getType()];
+          };
+
+          var geojsonObject = {
+            'type': 'FeatureCollection',
+            'crs': {
+              'type': 'name',
+              'properties': {
+                'name': 'EPSG:4326'
+              }
+            },
+            'features': [{
+              'type': 'Feature',
+              'geometry': {
+                'type': 'LineString',
+                'coordinates': [[-8720032.521075, -4331434.792390], [-5909499.530784, -6105178.323194]]
+              }
+            }]
+          };
+
+
+          _.each(elements,function(element,index,field){
+            if(typeof element.points != "undefined"){
+              self.data = [];
+              _.each(element.points,function(point,index2,field2){
+                  self.data.push([point.lng, point.lat]);
+                    //element[elements.fieldLevel]
+              });
+            }
+          });
+          geojsonObject.features.push({
+            'type': 'Feature',
+            'geometry': {
+              'type': 'LineString',
+              'coordinates': self.data
+            }
+          });
+
+          console.log(self.data);
+
+          var vectorSource = new ol.source.Vector({
+            features: (new ol.format.GeoJSON()).readFeatures(geojsonObject)
+          });
+
+
+          var vectorLayer = new ol.layer.Vector({
+            source: vectorSource,
+            style: styleFunction
+          });
+
+
+          var map = new ol.Map({
+            layers: [
+              new ol.layer.Tile({
+                source: new ol.source.XYZ({url: tile_url})
+              }),
+              vectorLayer
+            ],
+            target: 'windy',
+            controls: ol.control.defaults({
+              attributionOptions: {
+                collapsible: false
+              }
+            }),
             view: new ol.View({
-              center: ol.proj.fromLonLat([37.41, 8.82]),
-              zoom: 4
+              center: ol.proj.fromLonLat([-73.07624816894531,-36.78124222006407]),
+              zoom: 8
             })
           });
+        },
+        _renderOLHeat: function(elements, tile_url){
+
+          var view = new ol.View({
+            center: ol.proj.fromLonLat([-73.07624816894531,-36.78124222006407]),
+            zoom: 10,
+            maxZoom: 2,
+            minZoom: 10
+          });
+
+          var geolocation = new ol.Geolocation({
+            projection: view.getProjection(),
+	          tracking:true
+          });
+
+          // update the HTML page when the position changes.
+          geolocation.on('change', function() {
+          	view.setCenter(geolocation.getPosition());
+            view.setZoom(10);
+          });
+
+          // handle geolocation error.
+          geolocation.on('error', function(error) {
+            console.log(error);
+          });
+
+          var vector = new ol.layer.Heatmap({
+            source: new ol.source.Vector({
+              url: 'https://openlayers.org/en/v4.6.5/examples/data/kml/2012_Earthquakes_Mag5.kml',
+              format: new ol.format.KML({
+                extractStyles: false
+              })
+            }),
+            blur: parseInt(25, 10),
+            radius: parseInt(25, 10)
+          });
+
+          vector.getSource().on('addfeature', function(event) {
+            // 2012_Earthquakes_Mag5.kml stores the magnitude of each earthquake in a
+            // standards-violating <magnitude> tag in each Placemark.  We extract it from
+            // the Placemark's name instead.
+            var name = event.feature.get('name');
+            var magnitude = parseFloat(name.substr(2));
+            event.feature.set('weight', magnitude - 5);
+          });
+
+          var raster = new ol.layer.Tile({
+            source: new ol.source.XYZ({url: tile_url})
+          });
+
+          var map = new ol.Map({
+            layers: [raster, vector],
+            target: 'windy',
+            view: view
+          });
+
         },
     });
 

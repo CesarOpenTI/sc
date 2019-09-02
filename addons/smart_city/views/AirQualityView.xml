@@ -5,7 +5,7 @@
       <field name="name">Air Quality</field>
       <field name="res_model">air_quality</field>
       <field name="view_type">form</field>
-      <field name="view_mode">tree,map,form,graph,pivot</field>
+      <field name="view_mode">tree,map,form</field>
     </record>
 
     <record id="aQ_tree_view" model="ir.ui.view">

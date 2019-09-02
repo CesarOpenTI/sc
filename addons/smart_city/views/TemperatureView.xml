@@ -5,7 +5,7 @@
       <field name="name">Temperature</field>
       <field name="res_model">temperature</field>
       <field name="view_type">form</field>
-      <field name="view_mode">tree,map,form,graph</field>
+      <field name="view_mode">tree,map,form</field>
     </record>
 
     <record id="temperature_tree_view" model="ir.ui.view">
