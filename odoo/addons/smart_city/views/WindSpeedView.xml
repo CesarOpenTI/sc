@@ -15,9 +15,10 @@
       <field name="model">wind_speed</field>
       <field name="arch" type="xml">
         <tree>
+          <field name="id"/>
           <field name="name"/>
           <field name="speed"/>
-          <field name="levelSpeed"/>
+          <field name="levelSpeed" widget="progressbar"/>
         </tree>
       </field>
     </record>

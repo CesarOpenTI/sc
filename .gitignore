@@ -127,6 +127,7 @@ dmypy.json
 #Configuration
 odoo.conf
 devOpenTI.conf
+devOpenTI.conf.save
 .ftpconfig
 presentationOpenTI.conf
 testOpenTI.conf
